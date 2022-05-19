@@ -1,4 +1,4 @@
-package com.example.clusterization.neuralNetwork
+package com.example.clusterization.kmeans
 
 import kotlin.math.abs
 import kotlin.math.max

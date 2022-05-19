@@ -1,5 +1,7 @@
-package com.example.clusterization.neuralNetwork
+package com.example.clusterization.kmeans
 
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 

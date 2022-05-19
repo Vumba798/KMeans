@@ -16,6 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.clusterization.ui.screens.IntroScreen
+import com.example.clusterization.ui.screens.LogScreen
 import com.example.clusterization.ui.screens.MainScreen
 import com.example.clusterization.ui.theme.ClusterizationTheme
 
@@ -41,6 +42,7 @@ class MainActivity : ComponentActivity() {
 object MainDistinctions {
     const val INTRO_SCREEN = "introScreen"
     const val MAIN_SCREEN = "mainScreen"
+    const val LOG_SCREEN = "logScreen"
 }
 
 @Composable
@@ -58,6 +60,9 @@ fun NavGraphBuilder.homeNavGraph(navController: NavHostController) {
         IntroScreen(navController = navController)
     }
     composable(MainDistinctions.MAIN_SCREEN) {
-        MainScreen()
+        MainScreen(navController = navController)
+    }
+    composable(MainDistinctions.LOG_SCREEN) {
+        LogScreen()
     }
 }
