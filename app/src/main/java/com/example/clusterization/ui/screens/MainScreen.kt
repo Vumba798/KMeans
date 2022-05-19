@@ -202,7 +202,7 @@ fun MainScreen() {
                         }
                 },
                 colors = ButtonDefaults.buttonColors(Red800Light),
-                border = BorderStroke(1.dp, Color.Black),
+                border = BorderStroke(1.dp, Red800),
                 modifier = Modifier
                     .weight(1f)
             ) {
@@ -210,10 +210,22 @@ fun MainScreen() {
             }
             OutlinedButton(
                 onClick = {
-                    obj.step()
+                    val tmp = KMeans(points, clusters, ::euclideanDist).step()
+
+                    points.clear()
+                    tmp
+                        .map {it.key}
+                        .forEach {
+                            points.add(it as StaticPoint)
+                        }
+                    clusters.clear()
+                    tmp.map { it.value }
+                        .forEach {
+                            clusters.add(it as MovablePoint)
+                        }
                 },
                 colors = ButtonDefaults.buttonColors(Red800Light),
-                border = BorderStroke(1.dp, Color.Black),
+                border = BorderStroke(1.dp, Red800),
                 modifier = Modifier
                     .weight(1f)
             ) {
@@ -224,7 +236,7 @@ fun MainScreen() {
 
                 },
                 colors = ButtonDefaults.buttonColors(Red800Light),
-                border = BorderStroke(1.dp, Color.Black),
+                border = BorderStroke(1.dp, Red800),
                 modifier = Modifier
                     .weight(1f)
             ) {
@@ -235,7 +247,7 @@ fun MainScreen() {
 
                 },
                 colors = ButtonDefaults.buttonColors(Red800Light),
-                border = BorderStroke(1.dp, Color.Black),
+                border = BorderStroke(1.dp, Red800),
                 modifier = Modifier
                     .weight(1f)
             ) {

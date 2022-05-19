@@ -35,6 +35,8 @@ class KMeans(
 
     private fun recreateRelation() {
         relation.clear()
+
+
         points.forEach { point ->
             clusters
                 .minByOrNull {
