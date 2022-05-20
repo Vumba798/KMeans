@@ -301,7 +301,7 @@ fun DrawingArea(
                                 PointType.COMMON_POINT -> {
                                     points.add(StaticPoint(it))
                                     Logger.append(
-                                        action = "Added a point (${it.x}, ${it.y}), color = ${points.last().color}",
+                                        action = "Added a point\n(${it.x}, ${it.y})\ncolor = ${points.last().color.value}",
                                         details = logAll(points, clusters)
                                     )
                                 }
@@ -309,7 +309,7 @@ fun DrawingArea(
                                     if (clusters.size < clusterColors.size) {
                                         clusters.add(MovablePoint(it, clusterColors[clusters.size]))
                                         Logger.append(
-                                            action = "Added a cluster (${it.x}, ${it.y}), color = ${clusters.last().color}",
+                                            action = "Added a cluster\n(${it.x}, ${it.y})\ncolor = ${clusters.last().color.value}",
                                             details = logAll(points, clusters)
                                         )
                                     } else {
@@ -381,6 +381,10 @@ fun BottomBar(
         OutlinedButton(
             onClick = {
                 KMeans(points, clusters, distanceFunction).run()
+                Logger.append(
+                    action = "Run",
+                    details = logAll(points, clusters)
+                )
             },
             colors = ButtonDefaults.buttonColors(Red800Light),
             border = BorderStroke(1.dp, Red800),
@@ -394,6 +398,10 @@ fun BottomBar(
         OutlinedButton(
             onClick = {
                 KMeans(points, clusters, distanceFunction).step()
+                Logger.append(
+                    action = "Step",
+                    details = logAll(points, clusters)
+                )
             },
             colors = ButtonDefaults.buttonColors(Red800Light),
             border = BorderStroke(1.dp, Red800),
