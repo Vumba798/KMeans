@@ -53,55 +53,63 @@ val clusterColors = listOf(
 
 @Composable
 fun MainScreen(navController: NavHostController) {
+    var showLogs by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
     val pointType = rememberSaveable { mutableStateOf(PointType.COMMON_POINT) }
-    val distanceFunction = rememberSaveable { mutableStateOf<(BasicPoint, BasicPoint) -> Float>(::euclideanDist) }
+    val distanceFunction =
+        rememberSaveable { mutableStateOf<(BasicPoint, BasicPoint) -> Float>(::euclideanDist) }
     val stack by remember { mutableStateOf(ArrayDeque<PointType>()) }
 
 //    val points = rememberSaveable { mutableStateListOf<StaticPoint>() }
     val points = rememberMutableStateListOf<StaticPoint>()
     val clusters = remember { mutableStateListOf<MovablePoint>() }
 
+    if (showLogs) {
+        LogScreen() {
+            showLogs = false
+        }
+    } else {
+        Scaffold(
+            topBar = {
+                TopBar(
+                    context = context,
+                    points = points,
+                    clusters = clusters,
+                    stack = stack,
+                    pointType = pointType.value,
+                    updatePointType = { newType ->
+                        pointType.value = newType
+                    },
+                    function = distanceFunction.value,
+                    updateFunction = { newFunction ->
+                        distanceFunction.value = newFunction
+                    },
+                    navController = navController,
+                    onShowLogsChange = { showLogs = true }
+                )
+            },
+            bottomBar = {
+                BottomBar(
+                    points = points,
+                    clusters = clusters,
+                    stack = stack,
+                    distanceFunction = distanceFunction.value
+                )
+            },
+            modifier = Modifier
+                .fillMaxSize(),
 
-    Scaffold(
-        topBar = {
-            TopBar(
+            ) { padding ->
+            DrawingArea(
                 context = context,
                 points = points,
                 clusters = clusters,
                 stack = stack,
-                pointType = pointType.value,
-                updatePointType = { newType ->
-                    pointType.value = newType
-                },
-                function = distanceFunction.value,
-                updateFunction = { newFunction ->
-                    distanceFunction.value = newFunction
-                },
-                navController = navController,
+                pointType = pointType,
+                modifier = Modifier.padding(padding)
             )
-        },
-        bottomBar = {
-            BottomBar(
-                points = points,
-                clusters = clusters,
-                stack = stack,
-                distanceFunction = distanceFunction.value
-            )
-        },
-        modifier = Modifier
-            .fillMaxSize(),
-
-    ) { padding ->
-        DrawingArea(
-            context = context,
-            points = points,
-            clusters = clusters,
-            stack = stack,
-            pointType = pointType,
-            modifier = Modifier.padding(padding)
-        )
+        }
     }
 }
 
@@ -119,7 +127,8 @@ fun TopBar(
     updatePointType: (PointType) -> Unit,
     function: (BasicPoint, BasicPoint) -> Float,
     updateFunction: ((BasicPoint, BasicPoint) -> Float) -> Unit,
-    navController: NavHostController
+    navController: NavHostController,
+    onShowLogsChange: () -> Unit
 ) {
     var expandedFunction by rememberSaveable { mutableStateOf(false) }
     var selectedFunctionText by rememberSaveable { mutableStateOf("Euclidean") }
@@ -250,7 +259,8 @@ fun TopBar(
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
-                    navController.navigate(MainDistinctions.LOG_SCREEN)
+//                    navController.navigate(MainDistinctions.LOG_SCREEN)
+                    onShowLogsChange()
                 }
             },
             modifier = Modifier

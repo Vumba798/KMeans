@@ -62,7 +62,10 @@ fun NavGraphBuilder.homeNavGraph(navController: NavHostController) {
     composable(MainDistinctions.MAIN_SCREEN) {
         MainScreen(navController = navController)
     }
+    /*
     composable(MainDistinctions.LOG_SCREEN) {
         LogScreen()
     }
+
+     */
 }

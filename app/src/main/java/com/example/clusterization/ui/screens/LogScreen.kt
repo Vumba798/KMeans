@@ -1,5 +1,8 @@
 package com.example.clusterization.ui.screens
 
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,6 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -71,7 +75,10 @@ fun getClusterLogs(clusters: List<MovablePoint>, points: List<StaticPoint>) = bu
 }
 
 @Composable
-fun LogScreen() {
+fun LogScreen(onShowLogsChange: () -> Unit) {
+    val bh = BackHandler(enabled = true) {
+        onShowLogsChange()
+    }
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -129,7 +136,46 @@ class MyViewModel : ViewModel() {
     }
 
     fun update(index: Int, point: StaticPoint) {
-
+        points[index] = point
+        updateUi()
     }
 }
 
+@Composable
+fun MyComposableHandler() {
+    val viewModel = MyViewModel()
+    viewModel.onUpdate.value
+}
+
+/*
+@Composable
+fun BackHandler(enabled: Boolean = true, onBack: () -> Unit) {
+    // Safely update the current `onBack` lambda when a new one is provided
+    val currentOnBack by rememberUpdatedState(onBack)
+    // Remember in Composition a back callback that calls the `onBack` lambda
+    val backCallback = remember {
+        object : OnBackPressedCallback(enabled) {
+            override fun handleOnBackPressed() {
+                currentOnBack()
+            }
+        }
+    }
+    // On every successful composition, update the callback with the `enabled` value
+    SideEffect {
+        backCallback.isEnabled = enabled
+    }
+    val backDispatcher = checkNotNull(LocalOnBackPressedDispatcherOwner.current) {
+        "No OnBackPressedDispatcherOwner was provided via LocalOnBackPressedDispatcherOwner"
+    }.onBackPressedDispatcher
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner, backDispatcher) {
+        // Add callback to the backDispatcher
+        backDispatcher.addCallback(lifecycleOwner, backCallback)
+        // When the effect leaves the Composition, remove the callback
+        onDispose {
+            backCallback.remove()
+        }
+    }
+}
+
+ */
